@@ -42,17 +42,48 @@ input{
     font-size: 1rem;
 }
 
-.card {
-    margin-top: 10px;
-    padding: 5px;
-    width: 200px;
-    text-transform: capitalize;
-    border: 1.5px solid #777;
-    border-radius: 5px;
-    color: #242449;
-    margin: 10px;
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* Ajuste automático de columnas */
+    gap: 20px; /* Espacio entre las tarjetas */
+    padding: 20px;
 }
 
+.container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    padding: 20px;
+}
+.card {
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 15px;
+    width: 200px;
+    text-align: center;
+}
+.card img {
+    max-width: 100%;
+    height: auto;
+}
+.btn {
+    background-color: #217735;
+    color: white;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+}
+.card h3 {
+    text-transform: capitalize;
+}
+.card form input {
+    margin-top: 15px;
+    font-size: 1.3rem;
+}
+.card-action {
+    max-width: 100%;
+}
+/*
 .box {
     background-color: #eaff6a;
     padding: 40px;
@@ -62,3 +93,23 @@ input{
     -webkit-box-shadow: 3px 1px 20px -2px rgba(0, 0, 0, 0.44);
     -moz-box-shadow: 3px 1px 20px -2px rgba(0, 0, 0, 0.44);
 }
+*/
+
+  
+  .caja {
+    width: 550px;
+    height: 368px;
+    background-color: yellow;
+    background-size: cover;
+    border: 15px rgb(253, 233, 12) solid;
+    padding: 50px;
+    margin: 100px;
+  }
+  
+  img {
+    width: 200px;
+    height: 200px !important;
+    object-fit: cover;
+  }
+  
+  
