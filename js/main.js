@@ -7,9 +7,12 @@ const form = document.getElementById('inputForm');
 const contenedor = document.getElementById('contenedor');
 const form2 = document.getElementById('selectPlan');
 const contenedorS = document.getElementById('idSeries');
+const confirmButtonColorGral = getComputedStyle(document.documentElement).getPropertyValue('--confirm-button-color').trim();
 
 crearHtmlLista(seriePlanes);
 
+let planesDesdeOtroLugar=[];
+/*
 const planesEntrenamientos = [
     { id: 1, nombre: "5KM", distancia: 5, duracion: 4, img: "P5k.png" },
     { id: 2, nombre: "10KM", distancia: 10, duracion: 6, img: "P10k.png" },
@@ -17,7 +20,15 @@ const planesEntrenamientos = [
     { id: 4, nombre: "21KM", distancia: 21, duracion: 8, img: "P21k.png" },
     { id: 5, nombre: "30KM", distancia: 30, duracion: 10, img: "P30k.png" },
     { id: 6, nombre: "42KM", distancia: 42, duracion: 15, img: "P42k.png" },
-];
+     
+];*/
+
+const planesEntrenamientos=[];
+fetch('./data/planes.json')
+.then((response) => response.json())
+.then((planes) => {
+    planesEntrenamientos.push(...planes);
+});
 
 function calcular(edading,metrosing){
     return ((metrosing - 504) / 45)+(edading/100)
@@ -31,17 +42,37 @@ form.addEventListener('submit', function(event) {
     const metrosing = document.getElementById('metros').value;
 
     if (edading < 12) {
-        alert("La edad debe ser mayor a 12 años.");
+        swal.fire({
+            title: "La edad debe ser mayor a 12 años.",
+            confirmButtonColor: confirmButtonColorGral,
+          });
     } else if (!sexoing) {
-        alert("Debe seleccionar su sexo.");
+        swal.fire({
+            title: "Debe seleccionar su sexo.",
+            confirmButtonColor: confirmButtonColorGral,
+          });
     } else if (!metrosing) {
-        alert("Debe ingresar los metros que corrió.");
+        swal.fire({
+            title: "Debe ingresar los metros que corrió.",
+            confirmButtonColor: confirmButtonColorGral,
+          });
     } else {
         metros =metrosing;
         sexo=sexoing;
         edad=edading;
         vo2max = calcular(edad,metros);
-        crearHtml(planesEntrenamientos);
+        //crearHtml(planesEntrenamientos);
+
+        pedirPlanes(planesEntrenamientos)
+        .then((response)=>{
+            planesDesdeOtroLugar = response;
+            crearHtml(planesDesdeOtroLugar);
+        }).catch((error)=>{
+            swal.fire({
+                title: error,
+                confirmButtonColor: confirmButtonColorGral,
+            });
+        })
         clasificacionPersonal(vo2max,sexo);
         agregarListenerHTML(form2);
         leerLocalStorage();
@@ -128,6 +159,7 @@ function clasificacionPersonal(vo2maxIngre,sexoSel){
 }
 
 function crearHtml(arr) {
+    contenedor.innerHTML = "";
     let html = '';
     for (const { id, nombre, duracion, img } of arr) {
         html += `
@@ -145,7 +177,21 @@ function crearHtml(arr) {
     contenedor.innerHTML = html;
 }
 
-function crearHtmlLista(arrJ) {
+const pedirPlanes = (arr) =>{
+    contenedor.innerHTML = "GENERANDO....";
+    return new Promise((resolve,reject)=> {
+        setTimeout(()=>{
+            if(arr){
+                resolve(arr)
+            }else{
+                reject('error de datos')
+            }
+        },2000)
+    })
+}
+
+
+function crearHtmlLista (arrJ) {
     arr=JSON.parse(arrJ);
     let html = '';
     for (const { id, nombre, duracion, img } of arr) {

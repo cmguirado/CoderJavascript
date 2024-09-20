@@ -20,7 +20,7 @@ h1 {
 
 h1 span {
     font-size: 2.5rem;
-    background-color: #defc52;
+    background-color: rgb(106, 192, 126);
     padding: 0 0.4rem;
     font-style: bold;
     font-weight: 700;
@@ -67,7 +67,7 @@ input{
     height: auto;
 }
 .btn {
-    background-color: #217735;
+    background-color: rgb(33, 119, 53);
     color: white;
     border: none;
     padding: 10px;
@@ -106,10 +106,13 @@ input{
     margin: 100px;
   }
   
-  img {
+img {
     width: 200px;
     height: 200px !important;
     object-fit: cover;
-  }
+}
   
   
+:root {
+    --confirm-button-color: #217735;
+}

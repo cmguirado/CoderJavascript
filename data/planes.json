@@ -1,0 +1,8 @@
+[
+{ "id": 1, "nombre": "5KM", "distancia": 5, "duracion": 4, "img": "P5k.png" },
+{ "id": 2, "nombre": "10KM", "distancia": 10, "duracion": 6, "img": "P10k.png" },
+{ "id": 3, "nombre": "15KM", "distancia": 15, "duracion": 6, "img": "P15k.png" },
+{ "id": 4, "nombre": "21KM", "distancia": 21, "duracion": 8, "img": "P21k.png" },
+{ "id": 5, "nombre": "30KM", "distancia": 30, "duracion": 10, "img": "P30k.png" },
+{ "id": 6, "nombre": "42KM", "distancia": 42, "duracion": 15, "img": "P42k.png" }
+]
