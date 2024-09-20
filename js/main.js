@@ -12,7 +12,7 @@ const confirmButtonColorGral = getComputedStyle(document.documentElement).getPro
 crearHtmlLista(seriePlanes);
 
 let planesDesdeOtroLugar=[];
-/*
+
 const planesEntrenamientos = [
     { id: 1, nombre: "5KM", distancia: 5, duracion: 4, img: "P5k.png" },
     { id: 2, nombre: "10KM", distancia: 10, duracion: 6, img: "P10k.png" },
@@ -21,17 +21,19 @@ const planesEntrenamientos = [
     { id: 5, nombre: "30KM", distancia: 30, duracion: 10, img: "P30k.png" },
     { id: 6, nombre: "42KM", distancia: 42, duracion: 15, img: "P42k.png" },
      
-];*/
-
+];
+/*
+//VER ACA NESTOR
+//Quiero traer con fetch de la api los planesEntrenamientos para comentar el objeto de arriba
 const planesEntrenamientos=[];
 fetch('./data/planes.json')
 .then((response) => response.json())
 .then((planes) => {
     planesEntrenamientos.push(...planes);
-});
+});*/
 
 function calcular(edading,metrosing){
-    return ((metrosing - 504) / 45)+(edading/100)
+    return Math.round((((metrosing - 504) / 45)+(edading/100)) * 100) / 100
 }
 
 form.addEventListener('submit', function(event) {
@@ -46,23 +48,11 @@ form.addEventListener('submit', function(event) {
             title: "La edad debe ser mayor a 12 años.",
             confirmButtonColor: confirmButtonColorGral,
           });
-    } else if (!sexoing) {
-        swal.fire({
-            title: "Debe seleccionar su sexo.",
-            confirmButtonColor: confirmButtonColorGral,
-          });
-    } else if (!metrosing) {
-        swal.fire({
-            title: "Debe ingresar los metros que corrió.",
-            confirmButtonColor: confirmButtonColorGral,
-          });
     } else {
         metros =metrosing;
         sexo=sexoing;
         edad=edading;
         vo2max = calcular(edad,metros);
-        //crearHtml(planesEntrenamientos);
-
         pedirPlanes(planesEntrenamientos)
         .then((response)=>{
             planesDesdeOtroLugar = response;
@@ -85,6 +75,15 @@ btnLimpiar.addEventListener("click", () => {
     seriePlanes= JSON.stringify([]);
     leerLocalStorage();
     crearHtmlLista(seriePlanes);
+});
+
+btnVerDetalle.addEventListener("click", () => {
+    //VER ACA NESTOR
+    //En este boton ver detalle no me sale sacar el id del plan del carrito 
+    leerLocalStorage();
+    const planK = planesEntrenamientos.find(plan => plan.id === id); 
+    const planGenerado = generarPlan(planK);
+    mostrarPlan(planGenerado);
 });
 
 function agregarListenerHTML(formulario){
@@ -139,8 +138,6 @@ function clasificacionPersonal(vo2maxIngre,sexoSel){
         }else{
             clasificacion = "Excelente"
         }
-        //alert("Tu VO2 Max es de " + vo2max + " y clasifica como " + clasificacion + ". \nLa tabla es la siguiente:" +
-        //    "\n Pobre <35 \n Regular 35 - 40 \n Buena 40 - 45 \n Muy Buena 45 - 50 \n Excelente >50");
     }else {
         if(vo2maxIngre<30){
             clasificacion = "Pobre"     
@@ -153,9 +150,11 @@ function clasificacionPersonal(vo2maxIngre,sexoSel){
         }else{
             clasificacion = "Excelente"
         }
-        //alert("Tu VO2 Max es de " + vo2max + " y clasifica como " + clasificacion + ". \nLa tabla es la siguiente:" +
-        //    "\n Pobre <30 \n Regular 30 - 35 \n Buena 35 - 40 \n Muy Buena 40 - 45 \n Excelente >45");
     }
+    swal.fire({
+        title: "Tu VO2 Max es de " + vo2max + " y clasifica como " + clasificacion,
+        confirmButtonColor: confirmButtonColorGral,
+    });
 }
 
 function crearHtml(arr) {
@@ -190,14 +189,52 @@ const pedirPlanes = (arr) =>{
     })
 }
 
-
 function crearHtmlLista (arrJ) {
     arr=JSON.parse(arrJ);
     let html = '';
     for (const { id, nombre, duracion, img } of arr) {
         html += `
-            <li>Nombre:${nombre}, Duración: ${duracion} semanas</li>
+            <li>Nombre: ${nombre}, Duración: ${duracion} semanas</li>
         `;
     }
     contenedorS.innerHTML = html;
+}
+
+function generarPlan(plan) {
+    const { duracion, distancia } = plan;
+    const planSemanal = [];
+    
+    for (let semana = 1; semana <= duracion; semana++) {
+        const factor = Math.sin((Math.PI * semana) / duracion); 
+        const kmPorSemana = Math.round(distancia * factor); 
+  
+        const kmMartes = Math.round(kmPorSemana * 0.25);  
+        const kmJueves = Math.round(kmPorSemana * 0.25); 
+        const kmDomingo = kmPorSemana - (kmMartes + kmJueves); 
+  
+        planSemanal.push({
+            semana: semana,
+            dias: {
+                martes: `${kmMartes} km`,
+                jueves: `${kmJueves} km`,
+                domingo: `${kmDomingo} km`
+            }
+        });
+    }
+    return planSemanal;
+}
+  
+function mostrarPlan(plan) {
+    const planList = document.getElementById("planList");
+
+    plan.forEach(semana => {
+        const li = document.createElement("li");
+        li.innerHTML = `
+            <span>Semana ${semana.semana}:</span>
+            <br> Martes: ${semana.dias.martes}
+            <br> Jueves: ${semana.dias.jueves}
+            <br> Domingo: ${semana.dias.domingo}
+        `;
+        planList.appendChild(li);
+    });
 }

@@ -41,14 +41,6 @@ input{
     border-radius: 5px;
     font-size: 1rem;
 }
-
-.grid-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* Ajuste automático de columnas */
-    gap: 20px; /* Espacio entre las tarjetas */
-    padding: 20px;
-}
-
 .container {
     display: flex;
     flex-wrap: wrap;
@@ -56,63 +48,172 @@ input{
     padding: 20px;
 }
 .card {
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    padding: 15px;
-    width: 200px;
-    text-align: center;
-}
-.card img {
-    max-width: 100%;
-    height: auto;
-}
-.btn {
-    background-color: rgb(33, 119, 53);
-    color: white;
-    border: none;
-    padding: 10px;
-    cursor: pointer;
-}
-.card h3 {
-    text-transform: capitalize;
-}
-.card form input {
-    margin-top: 15px;
-    font-size: 1.3rem;
-}
-.card-action {
-    max-width: 100%;
-}
-/*
-.box {
-    background-color: #eaff6a;
-    padding: 40px;
     width: 300px;
-    border-radius: 20px;
-    box-shadow: 3px 1px 20px -2px rgba(0, 0, 0, 0.44);
-    -webkit-box-shadow: 3px 1px 20px -2px rgba(0, 0, 0, 0.44);
-    -moz-box-shadow: 3px 1px 20px -2px rgba(0, 0, 0, 0.44);
+    margin: 20px auto;
+    padding: 15px;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
-*/
 
-  
-  .caja {
-    width: 550px;
-    height: 368px;
-    background-color: yellow;
-    background-size: cover;
-    border: 15px rgb(253, 233, 12) solid;
-    padding: 50px;
-    margin: 100px;
-  }
-  
-img {
-    width: 200px;
-    height: 200px !important;
-    object-fit: cover;
+.card:hover {
+    transform: translateY(-5px); 
+    box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.2);
 }
-  
-  
+
+.card img {
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+}
+
+.card h3 {
+    font-size: 1.5em;
+    color: #217735;
+    margin: 10px 0;
+    font-family: 'Arial', sans-serif;
+}
+
+.card p {
+    font-size: 1.1em;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.btn {
+    background-color: #217735;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+    transition: background-color 0.3s ease;
+}
+
+.btn:hover {
+    background-color: #1a5d29;
+}
+
+.card hr {
+    border: none;
+    border-top: 1px solid #e0e0e0;
+    margin: 15px 0;
+}
+
+.card-action {
+    margin-top: 10px;
+}
+
 :root {
     --confirm-button-color: #217735;
+}
+
+.lista {
+    width: 300px;
+    margin: 20px auto;
+    padding: 15px;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.lista .btn {
+    display: inline-block;  /* Hace que los botones se alineen horizontalmente */
+    margin: 10px;  /* Añade espacio entre los botones */
+    padding: 10px 20px;  /* Añade un poco de padding para mejorar la apariencia */
+    background-color: #217735;  /* Color de fondo verde */
+    color: white;  /* Texto en blanco */
+    border: none;  /* Sin borde */
+    border-radius: 5px;  /* Bordes redondeados */
+    cursor: pointer;  /* Cambia el cursor al pasar sobre los botones */
+}
+
+
+
+h3 {
+    font-size: 1.5em;
+    color: #217735;
+    margin-bottom: 10px;
+    font-family: 'Arial', sans-serif;
+}
+
+ul#idSeries {
+    list-style-type: none; 
+    padding: 0;
+}
+
+ul#idSeries li {
+    background-color: #e0f4e8;
+    margin: 10px 0;
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s ease;
+    font-family: 'Arial', sans-serif;
+    font-size: 1.1em;
+    color: #333;
+}
+
+ul#idSeries li:hover {
+    background-color: #c6ead8;
+    cursor: pointer;
+}
+
+#inputForm {
+    width: 300px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    font-family: 'Arial', sans-serif;
+}
+
+#inputForm label {
+    display: block;
+    font-size: 1.1em;
+    color: #333;
+    margin-bottom: 5px;
+}
+
+#inputForm input[type="number"],
+#inputForm select {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+    font-size: 1em;
+    transition: border-color 0.3s ease;
+}
+
+#inputForm input[type="number"]:focus,
+#inputForm select:focus {
+    border-color: #217735;
+    outline: none;
+}
+
+.btn {
+    background-color: #217735;
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+    width: 100%;
+    transition: background-color 0.3s ease;
+}
+
+.btn:hover {
+    background-color: #1a5d29;
+}
+
+#inputForm br {
+    display: none;
 }
