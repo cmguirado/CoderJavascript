@@ -1,5 +1,5 @@
 let sigue = false;
-let edad, metros,sexo, vo2max;
+let edad, metros, sexo, vo2max;
 let seriePlanes = JSON.stringify([]);
 leerLocalStorage();
 
@@ -11,38 +11,21 @@ const confirmButtonColorGral = getComputedStyle(document.documentElement).getPro
 
 crearHtmlLista(seriePlanes);
 
-let planesDesdeOtroLugar=[];
+let planesDesdeOtroLugar = [];
 
-/*
-const planesEntrenamientos = [
-    { id: 1, nombre: "5KM", distancia: 5, duracion: 4, img: "P5k.png" },
-    { id: 2, nombre: "10KM", distancia: 10, duracion: 6, img: "P10k.png" },
-    { id: 3, nombre: "15KM", distancia: 15, duracion: 6, img: "P15k.png" },
-    { id: 4, nombre: "21KM", distancia: 21, duracion: 8, img: "P21k.png" },
-    { id: 5, nombre: "30KM", distancia: 30, duracion: 10, img: "P30k.png" },
-    { id: 6, nombre: "42KM", distancia: 42, duracion: 15, img: "P42k.png" },
-     
-];
-
-//VER ACA NESTOR
-//Quiero traer con fetch de la api los planesEntrenamientos para comentar el objeto de arriba
-//La solucion de esto, es montar el sitio y navegarlo desde un WEB SERVER... en vez de accediendo los archivos locales... ahi lee correctamente el jeison
-*/
-
-
-const planesEntrenamientos=[];
+const planesEntrenamientos = [];
 fetch('./data/planes.json')
-.then((response) => response.json())
-.then((planes) => {
-    planesEntrenamientos.push(...planes);
-});
+    .then((response) => response.json())
+    .then((planes) => {
+        planesEntrenamientos.push(...planes);
+    });
 
-function calcular(edading,metrosing){
-    return Math.round((((metrosing - 504) / 45)+(edading/100)) * 100) / 100
+function calcular(edading, metrosing) {
+    return Math.round((((metrosing - 504) / 45) + (edading / 100)) * 100) / 100
 }
 
-form.addEventListener('submit', function(event) {
-    event.preventDefault(); // Evita que el formulario se envíe automáticamente
+form.addEventListener('submit', function (event) {
+    event.preventDefault(); 
 
     const edading = document.getElementById('edad').value;
     const sexoing = document.getElementById('sexo').value;
@@ -52,23 +35,23 @@ form.addEventListener('submit', function(event) {
         swal.fire({
             title: "La edad debe ser mayor a 12 años.",
             confirmButtonColor: confirmButtonColorGral,
-          });
+        });
     } else {
-        metros =metrosing;
-        sexo=sexoing;
-        edad=edading;
-        vo2max = calcular(edad,metros);
+        metros = metrosing;
+        sexo = sexoing;
+        edad = edading;
+        vo2max = calcular(edad, metros);
         pedirPlanes(planesEntrenamientos)
-        .then((response)=>{
-            planesDesdeOtroLugar = response;
-            crearHtml(planesDesdeOtroLugar);
-        }).catch((error)=>{
-            swal.fire({
-                title: error,
-                confirmButtonColor: confirmButtonColorGral,
-            });
-        })
-        clasificacionPersonal(vo2max,sexo);
+            .then((response) => {
+                planesDesdeOtroLugar = response;
+                crearHtml(planesDesdeOtroLugar);
+            }).catch((error) => {
+                swal.fire({
+                    title: error,
+                    confirmButtonColor: confirmButtonColorGral,
+                });
+            })
+        clasificacionPersonal(vo2max, sexo);
         agregarListenerHTML(form2);
         leerLocalStorage();
         crearHtmlLista(seriePlanes);
@@ -77,38 +60,39 @@ form.addEventListener('submit', function(event) {
 
 btnLimpiar.addEventListener("click", () => {
     localStorage.removeItem("Serie");
-    seriePlanes= JSON.stringify([]);
+    seriePlanes = JSON.stringify([]);
     leerLocalStorage();
     crearHtmlLista(seriePlanes);
 });
 
-
-function limpiarTodo(){
+function limpiarTodo() {
     localStorage.removeItem("Serie");
-    seriePlanes= JSON.stringify([]);
+    seriePlanes = JSON.stringify([]);
     leerLocalStorage();
     return;
 }
 btnVerDetalle.addEventListener("click", () => {
-    //VER ACA NESTOR
-    //En este boton ver detalle no me sale sacar el id del plan del carrito 
-    //Aca lo que pasa, es que en el carrito podes tener mas de una cosa...
-    //el tema es que no deifniste ID en tus variables
-
-    id = 1;
-    limpiarTodo();
     leerLocalStorage();
-    const planK = planesEntrenamientos.find(plan => plan.id === id); 
-    const planGenerado = generarPlan(planK);
-    mostrarPlan(planGenerado);
+    try {mIdBuscar = (JSON.parse(seriePlanes))[0]["id"]
+        
+        const planK = planesEntrenamientos.find(plan => plan.id === mIdBuscar);
+        const planGenerado = generarPlan(planK);
+        mostrarPlan(planGenerado);
+    } catch {
+        swal.fire({
+            title: "No has elegido un plan valido...",
+            confirmButtonColor: confirmButtonColorGral,
+        });
+    }
+
 });
 
-function agregarListenerHTML(formulario){
+function agregarListenerHTML(formulario) {
     let idBtnSel;
-    formulario.addEventListener('submit', function(event) {
-        
-        event.preventDefault(); 
-        idBtnSel=event.submitter.id;
+    formulario.addEventListener('submit', function (event) {
+
+        event.preventDefault();
+        idBtnSel = event.submitter.id;
         limpiarTodo();
         agregarASerie(idBtnSel);
         leerLocalStorage();
@@ -116,57 +100,57 @@ function agregarListenerHTML(formulario){
     });
 }
 
-function agregarASerie(idPlan){
-    let planAAgregar = buscarPlan(planesEntrenamientos,idPlan);
+function agregarASerie(idPlan) {
+    let planAAgregar = buscarPlan(planesEntrenamientos, idPlan);
     let planTemp = JSON.parse(seriePlanes);
     planTemp.push(planAAgregar);
     seriePlanes = JSON.stringify(planTemp);
-    localStorage.setItem('Serie',seriePlanes)
+    localStorage.setItem('Serie', seriePlanes)
 }
 
-function leerLocalStorage(){
+function leerLocalStorage() {
     let LS = localStorage.getItem('Serie');
-    if(LS==null){
-        localStorage.setItem('Serie',seriePlanes)
+    if (LS == null) {
+        localStorage.setItem('Serie', seriePlanes)
     }
-    else{
+    else {
         seriePlanes = localStorage.getItem('Serie');
     }
 }
 
-function buscarPlan(arr,valorIngr){
-    let sel = arr.find(el=> el.id == valorIngr);
-    if ((sel != undefined) && (typeof sel === 'object')){
+function buscarPlan(arr, valorIngr) {
+    let sel = arr.find(el => el.id == valorIngr);
+    if ((sel != undefined) && (typeof sel === 'object')) {
         return sel;
-    }else{
+    } else {
         return false;
     }
 }
 
 let clasificacion
-function clasificacionPersonal(vo2maxIngre,sexoSel){
-    if (sexoSel == "masculino"){
-        if(vo2maxIngre<35){
-            clasificacion = "Pobre"     
-        }else if(vo2maxIngre<40){
+function clasificacionPersonal(vo2maxIngre, sexoSel) {
+    if (sexoSel == "masculino") {
+        if (vo2maxIngre < 35) {
+            clasificacion = "Pobre"
+        } else if (vo2maxIngre < 40) {
             clasificacion = "Regular"
-        }else if(vo2maxIngre<45){
+        } else if (vo2maxIngre < 45) {
             clasificacion = "Buena"
-        }else if(vo2maxIngre<50){
+        } else if (vo2maxIngre < 50) {
             clasificacion = "Muy Buena"
-        }else{
+        } else {
             clasificacion = "Excelente"
         }
-    }else {
-        if(vo2maxIngre<30){
-            clasificacion = "Pobre"     
-        }else if(vo2maxIngre<35){
+    } else {
+        if (vo2maxIngre < 30) {
+            clasificacion = "Pobre"
+        } else if (vo2maxIngre < 35) {
             clasificacion = "Regular"
-        }else if(vo2maxIngre<40){
+        } else if (vo2maxIngre < 40) {
             clasificacion = "Buena"
-        }else if(vo2maxIngre<45){
+        } else if (vo2maxIngre < 45) {
             clasificacion = "Muy Buena"
-        }else{
+        } else {
             clasificacion = "Excelente"
         }
     }
@@ -195,21 +179,21 @@ function crearHtml(arr) {
     contenedor.innerHTML = html;
 }
 
-const pedirPlanes = (arr) =>{
+const pedirPlanes = (arr) => {
     contenedor.innerHTML = "GENERANDO....";
-    return new Promise((resolve,reject)=> {
-        setTimeout(()=>{
-            if(arr){
+    return new Promise((resolve, reject) => {
+        setTimeout(() => {
+            if (arr) {
                 resolve(arr)
-            }else{
+            } else {
                 reject('error de datos')
             }
-        },2000)
+        }, 2000)
     })
 }
 
-function crearHtmlLista (arrJ) {
-    arr=JSON.parse(arrJ);
+function crearHtmlLista(arrJ) {
+    arr = JSON.parse(arrJ);
     let html = '';
     for (const { id, nombre, duracion, img } of arr) {
         html += `
@@ -222,15 +206,15 @@ function crearHtmlLista (arrJ) {
 function generarPlan(plan) {
     const { duracion, distancia } = plan;
     const planSemanal = [];
-    
+
     for (let semana = 1; semana <= duracion; semana++) {
-        const factor = Math.sin((Math.PI * semana) / duracion); 
-        const kmPorSemana = Math.round(distancia * factor); 
-  
-        const kmMartes = Math.round(kmPorSemana * 0.25);  
-        const kmJueves = Math.round(kmPorSemana * 0.25); 
-        const kmDomingo = kmPorSemana - (kmMartes + kmJueves); 
-  
+        const factor = Math.sin((Math.PI * semana) / duracion);
+        const kmPorSemana = Math.round(distancia * factor);
+
+        const kmMartes = Math.round(kmPorSemana * 0.25);
+        const kmJueves = Math.round(kmPorSemana * 0.25);
+        const kmDomingo = kmPorSemana - (kmMartes + kmJueves);
+
         planSemanal.push({
             semana: semana,
             dias: {
@@ -242,11 +226,9 @@ function generarPlan(plan) {
     }
     return planSemanal;
 }
-  
+
 function mostrarPlan(plan) {
     const planList = document.getElementById("planList");
-    //Hice el li un let, y saque el const de abajo por que no andaba si no.
-    //Tampoco tenias un elemento planList en tu HTML, por eso no podia leerlo :(
     let li = "";
     plan.forEach(semana => {
         li = document.createElement("li");
