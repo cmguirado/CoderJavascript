@@ -13,6 +13,7 @@ crearHtmlLista(seriePlanes);
 
 let planesDesdeOtroLugar=[];
 
+/*
 const planesEntrenamientos = [
     { id: 1, nombre: "5KM", distancia: 5, duracion: 4, img: "P5k.png" },
     { id: 2, nombre: "10KM", distancia: 10, duracion: 6, img: "P10k.png" },
@@ -22,15 +23,19 @@ const planesEntrenamientos = [
     { id: 6, nombre: "42KM", distancia: 42, duracion: 15, img: "P42k.png" },
      
 ];
-/*
+
 //VER ACA NESTOR
 //Quiero traer con fetch de la api los planesEntrenamientos para comentar el objeto de arriba
+//La solucion de esto, es montar el sitio y navegarlo desde un WEB SERVER... en vez de accediendo los archivos locales... ahi lee correctamente el jeison
+*/
+
+
 const planesEntrenamientos=[];
 fetch('./data/planes.json')
 .then((response) => response.json())
 .then((planes) => {
     planesEntrenamientos.push(...planes);
-});*/
+});
 
 function calcular(edading,metrosing){
     return Math.round((((metrosing - 504) / 45)+(edading/100)) * 100) / 100
@@ -77,9 +82,21 @@ btnLimpiar.addEventListener("click", () => {
     crearHtmlLista(seriePlanes);
 });
 
+
+function limpiarTodo(){
+    localStorage.removeItem("Serie");
+    seriePlanes= JSON.stringify([]);
+    leerLocalStorage();
+    return;
+}
 btnVerDetalle.addEventListener("click", () => {
     //VER ACA NESTOR
     //En este boton ver detalle no me sale sacar el id del plan del carrito 
+    //Aca lo que pasa, es que en el carrito podes tener mas de una cosa...
+    //el tema es que no deifniste ID en tus variables
+
+    id = 1;
+    limpiarTodo();
     leerLocalStorage();
     const planK = planesEntrenamientos.find(plan => plan.id === id); 
     const planGenerado = generarPlan(planK);
@@ -89,8 +106,10 @@ btnVerDetalle.addEventListener("click", () => {
 function agregarListenerHTML(formulario){
     let idBtnSel;
     formulario.addEventListener('submit', function(event) {
+        
         event.preventDefault(); 
         idBtnSel=event.submitter.id;
+        limpiarTodo();
         agregarASerie(idBtnSel);
         leerLocalStorage();
         crearHtmlLista(seriePlanes);
@@ -226,14 +245,15 @@ function generarPlan(plan) {
   
 function mostrarPlan(plan) {
     const planList = document.getElementById("planList");
-
+    //Hice el li un let, y saque el const de abajo por que no andaba si no.
+    //Tampoco tenias un elemento planList en tu HTML, por eso no podia leerlo :(
+    let li = "";
     plan.forEach(semana => {
-        const li = document.createElement("li");
+        li = document.createElement("li");
         li.innerHTML = `
-            <span>Semana ${semana.semana}:</span>
-            <br> Martes: ${semana.dias.martes}
-            <br> Jueves: ${semana.dias.jueves}
-            <br> Domingo: ${semana.dias.domingo}
+            <span> Semana ${semana.semana}: - Martes: ${semana.dias.martes} - Jueves: ${semana.dias.jueves} - Domingo: ${semana.dias.domingo}</span>
+            
+            
         `;
         planList.appendChild(li);
     });
